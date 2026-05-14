@@ -110,6 +110,7 @@ class DeployCommands(DAPConn):
             updated_at=time.time(),
         )
         await self._server.deployments.save(self._account_info.userId, record)
+        self._server.scheduler.schedule(self._account_info.userId, record)
         return self.build_response(request, body=record.model_dump())
 
     # ── rrext_deploy_remove ──────────────────────────────────────────────────
@@ -177,4 +178,5 @@ class DeployCommands(DAPConn):
 
         record.updated_at = time.time()
         await self._server.deployments.save(client_id, record)
+        self._server.scheduler.schedule(self._account_info.userId, record)
         return self.build_response(request, body={})
